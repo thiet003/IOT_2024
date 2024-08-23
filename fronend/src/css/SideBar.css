@@ -1,0 +1,97 @@
+body {
+    font-family: "Public Sans", sans-serif;
+}
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    background-color: #F9FAFB;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    border-right: 1px dashed #EDEFF1;
+    transition: transform 0.3s ease-in-out;
+}
+
+.sidebar-logo {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 10px;
+    padding: 20px 0;
+}
+
+.sidebar-logo p {
+    color: #ecf0f1;
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: black;
+}
+
+
+
+.sidebar-item {
+    width: calc(100% - 20px);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    color: #ecf0f1;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    padding: 10px 16px;
+    border-radius: 5px;
+    text-decoration: none;
+}
+.sidebar-item.active {
+    background-color: #D5E5FA;
+    color: #ffffff;
+}
+.sidebar-item.active span {
+    color: #2C83F2
+}
+.sidebar-item.active .sidebar-icon {
+    color: #2C83F2;
+}
+.sidebar-item:hover {
+    background-color: #EDEFF1;
+    color: #ffffff;
+}
+.sidebar-item.active:hover {
+    background-color: #c3d9f5;
+}
+.sidebar-item span {
+    font-size: 14px;
+    font-weight: 600;
+    color: #576069;
+}
+.sidebar-icon {
+    margin-right: 15px;
+    font-size: 24px;
+    color: #576069;
+}
+.sidebar-user {
+    display: flex;
+    align-items: center !important;
+    margin-bottom: 30px;
+    padding: 20px 10px;
+    background-color: #EDEFF1;
+    border-radius: 10px;
+    width: calc(100% - 20px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 20px;
+    margin-left: 20px;
+}
+
+.user-name {
+    color: #212B36;
+    font-size: 16px;
+    font-weight: 600;
+}

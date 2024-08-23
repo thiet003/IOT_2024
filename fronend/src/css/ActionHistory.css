@@ -1,0 +1,181 @@
+
+
+
+/* Nút toggle sidebar */
+.sidebar-toggle {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    font-size: 18px;
+    color: #000;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 1000;
+}
+
+/* ActionHistory.css */
+
+
+.action-history-content {
+    width: 100%;
+    margin: 0 auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    background: #ffffff;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    padding: 20px 50px;
+    border-radius: 10px;
+    max-width: 900px;
+}
+.action-history-content h1 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-top: 0;
+    text-align: center;
+}
+.action-history-content label {
+    display: block;
+    font-weight: bold;
+    text-align: start !important;
+    margin-left: 40px;
+    margin-bottom: 5px;
+}
+.search-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.search-row {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.search-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+.search-item label {
+    display: block;
+    margin-right: 100px;
+    margin-bottom: 5px;
+}
+.search-controls input[type="date"],
+.search-controls select,
+.search-controls button {
+    width: 100%;
+    max-width: 200px;
+    padding: 10px;
+    border-radius: 5px;
+    border: 2px solid #007bff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-size: 16px;
+}
+.search-controls input[type="date"] {
+    padding: 8px;
+    font-family: inherit;
+}
+.search-controls button {
+    margin-left: -20px;
+    background-color: #007bff;
+    color: #ffffff;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 22px;
+}
+.search-controls input[type="date"]:focus,
+.search-controls select:focus,
+.search-controls button:focus {
+    outline: none;
+    border-color: #0056b3;
+    box-shadow: 0 0 0 2px rgba
+}
+
+/* CSS for the action history table */
+.action-table {
+    margin-bottom: 20px;
+}
+
+.action-table table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 16px;
+}
+
+.action-table th, .action-table td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 2px solid #007bff;
+}
+
+.action-table th {
+    background-color: #007bff;
+    color: #ffffff;
+    /* text-transform: uppercase; */
+    letter-spacing: 0.1em;
+}
+
+.action-table tbody tr {
+    transition: background-color 0.3s ease;
+}
+
+.action-table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* CSS for the pagination */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.pagination button {
+    padding: 8px 12px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.pagination button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.pagination button:hover:not(:disabled) {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+.pagination .page-button {
+    padding: 8px 12px;
+    border: 2px solid #007bff;
+    background-color: #ffffff;
+    color: #007bff;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+}
+
+.pagination .page-button.active {
+    background-color: #007bff;
+    color: #ffffff;
+}
+
+.pagination .page-button:hover {
+    background-color: #0056b3;
+    color: #ffffff;
+    transform: translateY(-2px);
+}

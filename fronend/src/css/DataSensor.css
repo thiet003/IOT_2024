@@ -1,0 +1,161 @@
+/* DataSensor.css */
+
+  
+  .sensor-table-container {
+    font-size: 14px;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 2000px;
+    min-width: 1000px;
+    background: #fff;
+    border-radius: 8px;
+    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
+    padding: 20px;
+    margin-top: 10px;
+    padding-top: 0;
+  }
+  
+  h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  .search-container {
+    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 30px;
+  }
+  .data-search {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .search-items {
+        display: flex;
+        gap: 20px;
+        justify-content: space-between;
+  }
+  .search-items div {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+  }
+  .search-items div:last-child {
+    margin-left: 40px;
+  }
+  /* .search-container div {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+  } */
+  .search-container label {
+    display: block;
+    font-weight: bold;
+    color: #333;
+    margin-left: 10px;
+    margin-bottom: 5px;
+  }
+  .search-container input {
+    width: 100%;
+    font-family: inherit;
+    font-size: 14px;
+  }
+  .search-container input,
+  .search-container select,
+  .search-container button {
+    flex: 2;
+    padding: 6px;
+    border: 1px solid #007bff;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+  .search-container button {
+    padding: 8px 12px;
+  }
+  .search-container select {
+    width: 200px;
+  }
+  
+  .search-container button {
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+    border: none;
+    max-width: 150px;
+    margin-left: 50px;
+  }
+  
+  .search-container button:hover {
+    background-color: #0056b3;
+  }
+  
+  .sensor-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+  
+  .sensor-table th,
+  .sensor-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #007bff;
+  }
+  
+  .sensor-table th {
+    background-color: #007bff;
+    cursor: pointer;
+    color: #fff;
+  }
+  
+  /* .sensor-table th:hover {
+    background-color: #e9ecef;
+  } */
+  
+  .sensor-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  .sensor-table tr:hover {
+    background-color: #e9ecef;
+  }
+  
+  .pagination {
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    margin-top: 20px;
+  }
+  
+  .pagination button {
+    padding: 8px 12px;
+    border: 1px solid #007bff;
+    background-color: #fff;
+    color: #007bff;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 14px !important;
+  }
+  
+  .pagination button.active {
+    background-color: #007bff;
+    color: #fff;
+  }
+  
+  .pagination button:disabled {
+    cursor: not-allowed;
+    background-color: #e9ecef;
+    color: #6c757d;
+  }
+  
+  .pagination button:hover:not(:disabled) {
+    background-color: #e2e6ea;
+  }
+  
