@@ -33,7 +33,6 @@ const Dashboard = () => {
     // Chuyển đổi giờ về múi giờ Việt Nam (UTC+7)
     const vietnamOffset = 7 * 60; // UTC+7 tính bằng phút
     const localTime = new Date(date.getTime() + vietnamOffset * 60 * 1000);
-
     const hours = localTime.getUTCHours().toString().padStart(2, "0");
     const minutes = localTime.getUTCMinutes().toString().padStart(2, "0");
     const seconds = localTime.getUTCSeconds().toString().padStart(2, "0");
@@ -60,7 +59,6 @@ const Dashboard = () => {
         console.log("Fan state changed successfully:", data);
         const stateStr = data.fanState;
         console.log(stateStr);
-
         const state = stateStr === "on" ? true : false;
 
         // Cập nhật trạng thái bật/tắt của quạt
@@ -176,7 +174,7 @@ const Dashboard = () => {
     // Thiết lập interval để gọi lại fetchData mỗi 30 giây
     const intervalId = setInterval(() => {
       fetchData();
-    }, 30000); // 30000ms = 30 giây
+    }, 1000); // 1000ms = 1 giây
     if (localStorage.getItem("isFanOn") === "on") {
       setIsFanOn(true);
     }
@@ -190,28 +188,114 @@ const Dashboard = () => {
     // Dọn dẹp interval khi component unmount
     return () => clearInterval(intervalId);
   }, []);
-  // Tính toán màu sắc dựa trên dữ liệu
+  // Chuyển đổi màu sắc dựa trên giá trị nhiệt độ
   const getTemperatureColor = (temp) => {
-    const intensity = (temp - 15) / 2; // Điều chỉnh cường độ để nhạy cảm hơn
-    return `linear-gradient(to bottom, rgba(255, 99, 71, ${
-      intensity / 10
-    }), rgba(255, 69, 0, ${intensity / 10}))`;
-  };
+    // Đảm bảo giá trị nhiệt độ nằm trong khoảng 20 đến 40
+    const clampedTemp = Math.max(20, Math.min(temp, 40));
+    
+    // Tính toán tỷ lệ dựa trên nhiệt độ
+    const ratio = (clampedTemp - 20) / (40 - 20);
 
+    // Màu sắc cho các ngưỡng nhiệt độ
+    const startColor = { r: 255, g: 255, b: 0 }; // Vàng
+    const midColor = { r: 255, g: 165, b: 0 };   // Cam
+    const endColor = { r: 255, g: 0, b: 0 };     // Đỏ
+
+    // Tính toán màu sắc cho gradient
+    let color1, color2;
+    let mixRatio = ratio * 2;
+    if (ratio < 0.5) {
+        // Chuyển từ vàng sang cam
+        mixRatio = ratio * 2;
+        color1 = startColor;
+        color2 = midColor;
+    } else {
+        // Chuyển từ cam sang đỏ
+        mixRatio = (ratio - 0.5) * 2;
+        color1 = midColor;
+        color2 = endColor;
+    }
+
+    // Tính toán màu cuối cùng
+    const r = Math.round(color1.r * (1 - mixRatio) + color2.r * mixRatio);
+    const g = Math.round(color1.g * (1 - mixRatio) + color2.g * mixRatio);
+    const b = Math.round(color1.b * (1 - mixRatio) + color2.b * mixRatio);
+
+    // Tránh gradient quá trắng bằng cách sử dụng alpha thấp hơn và kiểm soát độ sáng
+    return `linear-gradient(to bottom, rgba(${r}, ${g}, ${b}, 1), rgba(${r}, ${g}, ${b}, 0.8))`;
+};
+  // Chuyển đổi màu sắc dựa trên giá trị độ ẩm
   const getHumidityColor = (hum) => {
-    const intensity = hum / 100; // Tính toán mức độ đậm nhạt
-    return `linear-gradient(to bottom, rgba(0, 191, 255, ${intensity}), rgba(30, 144, 255, ${intensity}))`;
-  };
+    // Đảm bảo giá trị hum nằm trong khoảng hợp lý (0 đến 100)
+    const clampedHum = Math.min(Math.max(hum, 0), 100);
+    
+    // Normalize humidity to be between 0 and 1
+    // Chuyển đổi cường độ độ ẩm từ 0 đến 100 thành tỷ lệ từ 0 đến 1
+    const normalizedHum = (clampedHum - 50) / 50; // Normalize range from 50 to 100
+    
+    // Màu sắc từ xanh nhạt đến xanh đậm
+    const startColor = { r: 0, g: 191, b: 255 }; // Xanh nhạt
+    const endColor = { r: 30, g: 144, b: 255 };  // Xanh đậm
+    
+    // Tính toán màu trung gian dựa trên giá trị normalizedHum
+    const r = Math.round(startColor.r + (endColor.r - startColor.r) * normalizedHum);
+    const g = Math.round(startColor.g + (endColor.g - startColor.g) * normalizedHum);
+    const b = Math.round(startColor.b + (endColor.b - startColor.b) * normalizedHum);
 
-  const getLightColor = (lux) => {
-    const intensity = 1 - lux / 1050; // Tính toán mức độ đậm nhạt
-    return `linear-gradient(to bottom, rgba(255, 215, 0, ${intensity}), rgba(255, 165, 0, ${intensity}))`;
-  };
+    // Để đảm bảo màu sắc rõ ràng hơn trong khoảng 50 đến 100, không cần linear-gradient, chỉ một màu sắc.
+    return `rgb(${r}, ${g}, ${b})`;
+};
+// Chuyển đổi màu sắc dựa trên giá trị ánh sáng
+  const getLightColor = (light) => {
+    // Đảm bảo giá trị ánh sáng nằm trong khoảng 0 đến 1024
+    const clampedLight = Math.max(0, Math.min(light, 1024));
+    
+    // Ngưỡng cho màu xám
+    const grayThreshold = 100;
 
+    // Tính toán tỷ lệ dựa trên cường độ ánh sáng
+    const ratio = clampedLight / 1024;
+
+    // Màu sắc cho các ngưỡng cường độ ánh sáng
+    const grayColor = { r: 128, g: 128, b: 128 };  // Xám
+    const startColorDark = { r: 0, g: 0, b: 128 };  // Xanh dương
+    const midColorDark = { r: 0, g: 128, b: 0 };    // Xanh lá nhạt
+    const midColorBright = { r: 0, g: 255, b: 0 };   // Xanh lá sáng
+    const endColorBright = { r: 255, g: 255, b: 0 };  // Vàng đậm
+
+    // Tính toán màu sắc cho gradient
+    let color1, color2;
+    let mixRatio;
+    if (clampedLight <= grayThreshold) {
+        // Chuyển từ xám đến xanh dương nhạt
+        mixRatio = clampedLight / grayThreshold; // Tỷ lệ chuyển đổi từ 0 đến 1
+        color1 = grayColor;
+        color2 = startColorDark;
+    } else if (clampedLight <= 500) {
+        // Chuyển từ xanh dương nhạt sang xanh lá nhạt
+        mixRatio = (clampedLight - grayThreshold) / (500 - grayThreshold); // Tỷ lệ chuyển đổi từ 0 đến 1
+        color1 = startColorDark;
+        color2 = midColorDark;
+    } else {
+        // Chuyển từ xanh lá sáng sang vàng đậm
+        mixRatio = (clampedLight - 500) / (1024 - 500); // Tỷ lệ chuyển đổi từ 0 đến 1
+        color1 = midColorBright;
+        color2 = endColorBright;
+    }
+
+    // Tính toán màu cuối cùng
+    const r = Math.round(color1.r * (1 - mixRatio) + color2.r * mixRatio);
+    const g = Math.round(color1.g * (1 - mixRatio) + color2.g * mixRatio);
+    const b = Math.round(color1.b * (1 - mixRatio) + color2.b * mixRatio);
+
+    // Sử dụng alpha thấp hơn và kiểm soát độ sáng
+    return `linear-gradient(to bottom, rgba(${r}, ${g}, ${b}, 1), rgba(${r}, ${g}, ${b}, 0.8))`;
+};
   const getLightTextColor = (lux) => {
     return lux > 512 ? "#000" : "#fff"; // Chọn màu chữ dựa trên độ sáng
   };
 
+  
   return (
     <div id="main">
       <button className="sidebar-toggle" onClick={toggleSidebar}>

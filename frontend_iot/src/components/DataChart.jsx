@@ -1,25 +1,27 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
-import { useEffect } from 'react';
+
+
 const DataChart = ({ data }) => {
   return (
     <ResponsiveContainer width="100%" height={400}>
       <LineChart
         data={data}
         margin={{
-          top: 20, right: 30, left: 20, bottom: 5,
+          top: 20, right: 50, left: 20, bottom: 5,
         }}
       >
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="date" />
-        <YAxis />
+        <YAxis yAxisId="left" domain={[0, 'auto']} width={60} />
+        <YAxis yAxisId="right" orientation="right" domain={[0, 1024]} width={60} />
         <Tooltip />
         <Legend />
-        <Line type="monotone" dataKey="temperature" stroke="#ff7300" />
-        <Line type="monotone" dataKey="humidity" stroke="#387908" />
-        <Line type="monotone" dataKey="light" stroke="#ffbb00" />
+        <Line yAxisId="left" type="cardinal" dataKey="temperature" stroke="red" dot={false} />
+        <Line yAxisId="left" type="cardinal" dataKey="humidity" stroke="#007bff" dot={false} />
+        <Line yAxisId="right" type="monotone" dataKey="light" stroke="#ffbb00" dot={false} />
       </LineChart>
     </ResponsiveContainer>
   );

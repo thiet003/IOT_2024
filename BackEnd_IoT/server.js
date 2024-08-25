@@ -31,6 +31,7 @@ app.post('/api/v1/lamp/status', changeLamp);
 app.get('/api/v1/top-last-sensor', topLastSensor.topLastSensor);
 app.get('/api/v1/history-action', getHistoryAction);
 app.get('/api/v1/sensors', getAllSenSor);
+
 mqttClient.on('message', (topic, message) => {
   // message là một Buffer, chuyển đổi nó thành chuỗi
   if (topic === 'sensor/data') {
@@ -41,12 +42,14 @@ mqttClient.on('message', (topic, message) => {
       const temperature = parsedData.temperature;
       const humidity = parsedData.humidity;
       const light = parsedData.light;
+      console.log('temperature:', temperature);
+      
       // Lưu dữ liệu vào MongoDB
       if (temperature && humidity && light) {
         const sensor = new Sensor({
           temperature: parseFloat(temperature),
           humidity: parseFloat(humidity),
-          light: parseFloat(light),
+          light: 1024 - parseFloat(light),
         });
         sensor.save();
       }

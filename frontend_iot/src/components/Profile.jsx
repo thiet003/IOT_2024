@@ -26,8 +26,8 @@ const Profile = () => {
             Student at Posts and Telecommunications Institute of Technology
             </p>
             <div className="social-links">
-              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">Facebook</a>
-              <a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a>
+              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">Báo cáo</a>
+              <a href="https://github.com/thiet003/IOT_2024" target="_blank" rel="noopener noreferrer">GitHub</a>
             </div>
           </div>
         </div>
@@ -52,14 +52,14 @@ const Profile = () => {
   <div className="skills">
     <div className="skills-item">
       <img src="img/react.png" alt="React Logo" className="skill-logo" />
-      React - Expert
+      React - Basic
     </div>
     <div className="skills-item">
       <img src="img/node.png" alt="Node.js Logo" className="skill-logo" />
       Node.js - Advanced
     </div>
     <div className="skills-item">
-      <img src="img/post.png" alt="Python Logo" className="skill-logo" />
+      <img src="img/python.png" alt="Python Logo" className="skill-logo" />
       Python - Intermediate
     </div>
   </div>
