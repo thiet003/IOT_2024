@@ -1,0 +1,5 @@
+DHT11 : https://github.com/adafruit/DHT-sensor-library
+Pubsubclient : https://pubsubclient.knolleary.net/
+ArduinoJson : https://arduinojson.org/?utm_source=meta&utm_medium=library.properties
+ESP8266WiFi :
+NTPClient , WifiUdp : https://github.com/arduino-libraries/NTPClient
