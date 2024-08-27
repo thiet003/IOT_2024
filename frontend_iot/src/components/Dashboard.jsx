@@ -157,11 +157,12 @@ const Dashboard = () => {
     if (response.ok) {
       const data = await response.json();
       // Lưu và sắp xếp theo từ cũ đến mới
+      console.log(data);
       data.sort((a, b) => new Date(a.date) - new Date(b.date));
       data.forEach((item) => {
         item.date = formatTime(item.date);
       });
-
+      
       setTopLastSensor(data);
       setTemperature(data[data.length - 1].temperature);
       setHumidity(data[data.length - 1].humidity);

@@ -4,18 +4,29 @@ const cors = require('cors');
 const port = 8000;
 const mongoose = require('mongoose');
 const Sensor = require('./models/sensors.model');
-
+const swaggerJsdoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
 // Allow parsing JSON
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Import controllers
-const changeFan = require('./controllers/changeFan.controller');
-const changeAir = require('./controllers/changeAir.controller');
-const changeLamp = require('./controllers/changeLamp.controller');
-const topLastSensor = require('./controllers/topLastSensor.controller');
-const getHistoryAction = require('./controllers/getHistoryAction.controller');
-const getAllSenSor = require('./controllers/getAllSenSor.controller');
+// Cấu hình các tùy chọn cho Swagger
+const swaggerOptions = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'API Documentation',
+      version: '1.0.0',
+      description: 'API documentation for your Node.js project',
+    },
+  },
+  apis: ['./routes/*.js'], // Đường dẫn tới các tệp chứa chú thích Swagger
+};
+const swaggerSpec = swaggerJsdoc(swaggerOptions);
+
+// Cấu hình Swagger UI
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 
 // Kết nối đến broker MQTT
 const mqttClient = require('./mqtt/mqttClient');
@@ -24,19 +35,15 @@ const mqttClient = require('./mqtt/mqttClient');
 app.use(cors());
 
 // Routes
-app.post('/api/v1/fan/status', changeFan);
-app.post('/api/v1/air/status', changeAir);
-app.post('/api/v1/lamp/status', changeLamp);
-
-app.get('/api/v1/top-last-sensor', topLastSensor.topLastSensor);
-app.get('/api/v1/history-action', getHistoryAction);
-app.get('/api/v1/sensors', getAllSenSor);
+const mainRoute = require('./routes/main.route');
+app.use('/' ,mainRoute);
 
 mqttClient.on('message', (topic, message) => {
   // message là một Buffer, chuyển đổi nó thành chuỗi
-  if (topic === 'sensor/data') {
+  if (topic === 'sensor/datas') {
     const data = message.toString();
     try {
+      console.log('data:', data);
       const parsedData = JSON.parse(data);
       // Trích xuất nhiệt độ, độ ẩm và ánh sáng từ dữ liệu
       const temperature = parsedData.temperature;

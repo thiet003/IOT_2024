@@ -51,6 +51,8 @@ const ActionHistory = () => {
     const response = await fetch(api);
     if (response.ok) {
       const data = await response.json();
+      console.log(data);
+      
       setActions(data.actions);
       setTotalPages(data.totalPages);
     }

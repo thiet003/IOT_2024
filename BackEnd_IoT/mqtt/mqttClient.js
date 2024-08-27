@@ -5,7 +5,7 @@ const mqttClient = mqtt.connect('mqtt://test.mosquitto.org');
 
 mqttClient.on('connect', () => {
     console.log('Connected to MQTT broker');
-    mqttClient.subscribe('sensor/data', (err) => {
+    mqttClient.subscribe('sensor/datas', (err) => {
       if (err) {
         console.error('Failed to subscribe to topic');
       }

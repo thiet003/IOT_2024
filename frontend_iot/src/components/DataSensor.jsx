@@ -30,6 +30,8 @@ const DataSensor = () => {
         `http://localhost:8000/api/v1/sensors?page=${page}&keyword=${searchTerm}&searchBy=${searchField}&startDate=${startDate}&endDate=${endDate}&sortBy=${sortBy}&typeSort=${typeSort}`
       );
       const result = await response.json();
+      console.log(result);
+      
       setData(result.results);
       setTotalPages(result.totalPages);
       setIsDataEmpty(false);
