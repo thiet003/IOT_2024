@@ -171,6 +171,7 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
+    document.title = 'Dashboard';
     fetchData();
     // Thiết lập interval để gọi lại fetchData mỗi 30 giây
     const intervalId = setInterval(() => {

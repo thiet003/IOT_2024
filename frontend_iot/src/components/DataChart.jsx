@@ -19,9 +19,30 @@ const DataChart = ({ data }) => {
         <YAxis yAxisId="right" orientation="right" domain={[0, 1024]} width={60} />
         <Tooltip />
         <Legend />
-        <Line yAxisId="left" type="cardinal" dataKey="temperature" stroke="red" dot={false} />
-        <Line yAxisId="left" type="cardinal" dataKey="humidity" stroke="#007bff" dot={false} />
-        <Line yAxisId="right" type="monotone" dataKey="light" stroke="#ffbb00" dot={false} />
+        <Line
+          yAxisId="left"
+          type="cardinal"
+          dataKey="temperature"
+          stroke="red"
+          dot={false}
+          name="Nhiệt độ"
+        />
+        <Line
+          yAxisId="left"
+          type="cardinal"
+          dataKey="humidity"
+          stroke="#007bff"
+          dot={false}
+          name="Độ ẩm"
+        />
+        <Line
+          yAxisId="right"
+          type="monotone"
+          dataKey="light"
+          stroke="#ffbb00"
+          dot={false}
+          name="Ánh sáng"
+        />
       </LineChart>
     </ResponsiveContainer>
   );

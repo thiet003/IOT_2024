@@ -42,6 +42,7 @@ const DataSensor = () => {
   };
 
   useEffect(() => {
+    document.title = 'Data Sensor';
     fetchData();
   }, [page, sortBy, typeSort]);
 

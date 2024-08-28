@@ -64,6 +64,7 @@ const ActionHistory = () => {
   };
 
   useEffect(() => {
+    document.title = 'Action History';
     fetchActions();
   }, [currentPage, sensorName]);
 

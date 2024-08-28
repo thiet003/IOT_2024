@@ -4,6 +4,7 @@ import '../css/Profile.css';
 import { FaBars } from 'react-icons/fa';
 import { useSidebar } from '../contexts/SidebarContext';
 const Profile = () => {
+  document.title = 'Profile';
     const { isSidebarOpen, toggleSidebar } = useSidebar();
   return (
     <div id="main">
@@ -26,7 +27,7 @@ const Profile = () => {
             Student at Posts and Telecommunications Institute of Technology
             </p>
             <div className="social-links">
-              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">Báo cáo</a>
+              <a href="https://drive.google.com/file/d/130BPNxzb6o6xDiyhjFm7PeCbyMIPaD7G/view?usp=sharing" target="_blank" rel="noopener noreferrer">Báo cáo</a>
               <a href="https://github.com/thiet003/IOT_2024" target="_blank" rel="noopener noreferrer">GitHub</a>
             </div>
           </div>
