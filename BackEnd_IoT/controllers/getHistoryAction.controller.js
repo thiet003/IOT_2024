@@ -1,28 +1,64 @@
 const Action = require('../models/actions.model');
-
+const changeTimezone = (datStr) => {
+    // Từ múi giờ GMT+7 chuyển về UTC
+    // Datestring ở dạng DD/MM/YYYY HH:mm:ss
+    // Regex để check xem có phải đúng định dạng không
+    const dateRegex = /^\d{2}\/\d{2}\/\d{4} \d{2}:\d{2}:\d{2}$/;
+    if (!dateRegex.test(datStr)) {
+        return null;
+    }
+    const date = datStr.split(" ")[0];
+    const time = datStr.split(" ")[1];
+    const dateParts = date.split("/");
+    const timeParts = time.split(":");
+    const dateObject = new Date(
+        +dateParts[2],
+        dateParts[1] - 1,
+        +dateParts[0],
+        +timeParts[0],
+        +timeParts[1],
+        +timeParts[2]
+    );
+    return dateObject;
+    
+};
 // Lấy lịch sử hành động, có phân trang, tìm kiếm từ ngày này đến ngày khác
 const getHistoryAction = async (req, res) => {
     // Page, limit
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
-    // Start date, end date
-    const startDate = req.query.startDate ? new Date(req.query.startDate) : null;
-    const endDate = req.query.endDate ? new Date(req.query.endDate) : null;
-    const sensorName = req.query.sensorName;
-    if ((startDate && isNaN(startDate.getTime())) || (endDate && isNaN(endDate.getTime()))) {
-        return res.status(400).json({ error: "Invalid date format. Use YYYY-MM-DD." });
+
+    // Time ở dạng DD/MM/YYYY HH:mm:ss và múi giờ GMT+7
+    let time = req.query.time;
+    // Trim time
+    if (time) {
+        time = time.trim();
     }
-    if(startDate)
+    let formattedUTCDateStart = null;
+    let formattedUTCDateEnd = null;
+    if(time)
     {
-        startDate.setHours(0, 0, 0, 0); // Set startDate to the beginning of the day
+        // Chuyển về dạng UTC ở dạng 2024-09-02T08:17:10.000Z
+        formattedUTCDateStart = changeTimezone(time);
+        if (formattedUTCDateStart) {
+            formattedUTCDateEnd = new Date(formattedUTCDateStart);
+            formattedUTCDateEnd.setSeconds(formattedUTCDateStart.getSeconds() + 1);
+        }
     }
-    if (endDate) {
-        endDate.setHours(23, 59, 59, 999); // Set endDate to the end of the day
-    }
+    
+    const sensorName = req.query.sensorName;
     // Query object    
+    console.log("Start date: ", formattedUTCDateStart);
+    console.log("End date: ", formattedUTCDateEnd);
+    
     const query = {};
     if (sensorName) query.sensorName = sensorName;
-    if (startDate && endDate) query.date = { $gte: startDate, $lte: endDate };
+    if (formattedUTCDateStart && formattedUTCDateEnd) {
+        query.date = {
+            $gte: formattedUTCDateStart,
+            $lt: formattedUTCDateEnd
+        };
+    }
     try {
         const actions = await Action.find(query)
             .sort({ date: -1 })

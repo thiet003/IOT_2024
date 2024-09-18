@@ -29,6 +29,7 @@ const Profile = () => {
             <div className="social-links">
               <a href="https://drive.google.com/file/d/130BPNxzb6o6xDiyhjFm7PeCbyMIPaD7G/view?usp=sharing" target="_blank" rel="noopener noreferrer">Báo cáo</a>
               <a href="https://github.com/thiet003/IOT_2024" target="_blank" rel="noopener noreferrer">GitHub</a>
+              <a href="http://localhost:8000/api-docs/" target="_blank" rel="noopener noreferrer">API Docs</a>
             </div>
           </div>
         </div>

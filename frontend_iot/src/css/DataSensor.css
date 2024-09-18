@@ -158,4 +158,23 @@
   .pagination button:hover:not(:disabled) {
     background-color: #e2e6ea;
   }
-  
+  .pagination {
+    margin-top: 20px;
+    position: relative;
+  }
+  .page-size {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  .page-size label {
+    margin-right: 10px;
+    font-weight: 700;
+  }
+  .page-size input {
+    padding: 6px;
+    border: 1px solid #007bff;
+    border-radius: 4px;
+    font-size: 14px;
+  }

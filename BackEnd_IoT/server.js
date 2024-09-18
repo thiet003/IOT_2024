@@ -43,13 +43,13 @@ mqttClient.on('message', (topic, message) => {
   if (topic === 'sensor/datas') {
     const data = message.toString();
     try {
-      console.log('data:', data);
+      // console.log('data:', data);
       const parsedData = JSON.parse(data);
       // Trích xuất nhiệt độ, độ ẩm và ánh sáng từ dữ liệu
       const temperature = parsedData.temperature;
       const humidity = parsedData.humidity;
       const light = parsedData.light;
-      console.log('temperature:', temperature);
+      // console.log('temperature:', temperature);
       
       // Lưu dữ liệu vào MongoDB
       if (temperature && humidity && light) {

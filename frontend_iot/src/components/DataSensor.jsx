@@ -6,6 +6,7 @@ import { useSidebar } from "../contexts/SidebarContext";
 import moment from "moment-timezone";
 
 const DataSensor = () => {
+  const [limit, setLimit] = useState(10);
   const [isDataEmpty, setIsDataEmpty] = useState(false);
   const { isSidebarOpen, toggleSidebar } = useSidebar();
   const [data, setData] = useState([]);
@@ -27,7 +28,7 @@ const DataSensor = () => {
   const fetchData = async () => {
     try {
       const response = await fetch(
-        `http://localhost:8000/api/v1/sensors?page=${page}&keyword=${searchTerm}&searchBy=${searchField}&startDate=${startDate}&endDate=${endDate}&sortBy=${sortBy}&typeSort=${typeSort}`
+        `http://localhost:8000/api/v1/sensors?page=${page}&keyword=${searchTerm}&searchBy=${searchField}&startDate=${startDate}&endDate=${endDate}&sortBy=${sortBy}&typeSort=${typeSort}&limit=${limit}`
       );
       const result = await response.json();
       console.log(result);
@@ -128,7 +129,9 @@ const DataSensor = () => {
                   <option value="humidity">Độ ẩm</option>
                   <option value="light">Ánh sáng</option>
                 </select>
+                
               </div>
+              
             </div>
             <div className="search-items">
               <div>
@@ -178,7 +181,7 @@ const DataSensor = () => {
           <tbody>
             {data.map((sensor, index) => (
               <tr key={sensor.id}>
-                <td>{index}</td>
+                <td>{index + 1}</td>
                 <td>{sensor.id}</td>
                 <td>{sensor.temperature}°C</td>
                 <td>{sensor.humidity}%</td>
@@ -219,7 +222,12 @@ const DataSensor = () => {
           >
             Last
           </button>
+          <div className="page-size">
+              <label htmlFor="searchField">Page size:</label>
+              <input type="number" value={limit} onChange={(e) => setLimit(e.target.value)} />
         </div>
+        </div>
+        
       </div>
     </div>
   );

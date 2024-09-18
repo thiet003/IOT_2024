@@ -4,21 +4,17 @@ import "../css/ActionHistory.css";
 import { FaBars } from "react-icons/fa";
 import { useSidebar } from "../contexts/SidebarContext";
 import { useEffect } from "react";
+import moment from "moment-timezone";
 
 const ActionHistory = () => {
-  const formatDate = (date) => {
-    const d = new Date(date);
-    const year = d.getFullYear();
-    let month = d.getMonth() + 1;
-    let day = d.getDate();
-    if (month < 10) {
-      month = `0${month}`;
-    }
-    if (day < 10) {
-      day = `0${day}`;
-    }
-    return `${day}/${month}/${year}`;
-  };
+  const formatDate = (dateString) => {
+    const vietnamTimezone = "Asia/Ho_Chi_Minh";
+    const formattedDate = moment(dateString)
+      .tz(vietnamTimezone)
+      .format("DD/MM/YYYY HH:mm:ss");
+    return formattedDate;
+  };  
+
 
   const formatTime = (date) => {
     const d = new Date(date);
@@ -36,7 +32,7 @@ const ActionHistory = () => {
     }
     return `${hours}:${minutes}:${seconds}`;
   };
-
+  const [limit, setLimit] = useState(10);
   const { isSidebarOpen, toggleSidebar } = useSidebar();
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -44,10 +40,10 @@ const ActionHistory = () => {
   const [actions, setActions] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
+  const [time, setTime] = useState('');
 
   const fetchActions = async () => {
-    const limit = 10;
-    const api = `http://localhost:8000/api/v1/history-action?startDate=${startDate}&endDate=${endDate}&sensorName=${sensorName}&page=${currentPage}&limit=${limit}`;
+    const api = `http://localhost:8000/api/v1/history-action?sensorName=${sensorName}&page=${currentPage}&limit=${limit}&time=${time}`;
     const response = await fetch(api);
     if (response.ok) {
       const data = await response.json();
@@ -129,28 +125,15 @@ const ActionHistory = () => {
         <div className="search-controls">
           <div className="search-row">
             <div className="search-item">
-              <label htmlFor="startDate">Ngày bắt đầu:</label>
+              <label htmlFor="startDate">Thời gian:</label>
               <input
-                type="date"
+                type="text"
                 id="startDate"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
+                value={time}
+                onChange={(e) => setTime(e.target.value)}
+                placeholder="Nhập thời gian"
               />
             </div>
-            <div className="search-item">
-              <label htmlFor="endDate">Ngày kết thúc:</label>
-              <input
-                type="date"
-                id="endDate"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-              />
-            </div>
-            <div className="search-item">
-              <button onClick={handleSearch}>Tìm kiếm</button>
-            </div>
-          </div>
-          <div className="search-row">
             <div className="search-item">
               <label htmlFor="sensorName">Tên thiết bị:</label>
               <select
@@ -164,6 +147,9 @@ const ActionHistory = () => {
                 <option value="Đèn">Đèn</option>
               </select>
             </div>
+            <div className="search-item">
+              <button onClick={handleSearch}>Tìm kiếm</button>
+            </div>
           </div>
         </div>
         <div className="action-table">
@@ -174,8 +160,7 @@ const ActionHistory = () => {
                 <th>ID</th>
                 <th>Thiết bị</th>
                 <th>Hành động</th>
-                <th>Ngày thực hiện</th>
-                <th>Giờ thực hiện</th>
+                <th>Thời gian thực hiện</th>
               </tr>
             </thead>
             <tbody>
@@ -186,7 +171,6 @@ const ActionHistory = () => {
                   <td>{action.sensorName}</td>
                   <td>{action.action}</td>
                   <td>{formatDate(action.date)}</td>
-                  <td>{formatTime(action.date)}</td>
                 </tr>
               ))}
             </tbody>
@@ -212,6 +196,10 @@ const ActionHistory = () => {
           >
             Last
           </button>
+          <div className="page-size2">
+            <label className="lable-ps" htmlFor="">Page size</label>
+            <input type="number" value={limit} onChange={(e) => setLimit(e.target.value)} />
+          </div>
         </div>
       </div>
     </div>

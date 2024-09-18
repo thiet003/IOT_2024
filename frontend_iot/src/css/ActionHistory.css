@@ -53,21 +53,46 @@
     display: flex;
     gap: 15px;
     align-items: center;
-    justify-content: space-between;
 }
 
 .search-item {
-    flex: 1;
     display: flex;
     flex-direction: column;
     align-items: flex-end;
+}
+.search-item:last-child {
+    margin-left: 50px;
+    justify-self: flex-end;
+    width: 100px;
+}
+.search-item input[type = "number"] {
+    width: 100%;
+    max-width: 200px;
+    padding: 10px;
+    border-radius: 5px;
+    border: 2px solid #007bff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-size: 16px;
+    justify-content: flex-start;
 }
 .search-item label {
     display: block;
     margin-right: 100px;
     margin-bottom: 5px;
 }
-.search-controls input[type="date"],
+.lable-ps {
+    display: block;
+    text-align: start;
+    margin-right: 150px !important;
+}
+.search-item:first-child {
+    align-items: flex-start;
+    margin-left: 100px;
+}
+.search-item:nth-child(2) {
+    margin-left: 50px;
+}
+.search-controls input[type="text"],
 .search-controls select,
 .search-controls button {
     width: 100%;
@@ -78,10 +103,11 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     font-size: 16px;
 }
-.search-controls input[type="date"] {
+.search-controls input[type="text"] {
     padding: 8px;
     font-family: inherit;
 }
+
 .search-controls button {
     margin-left: -20px;
     background-color: #007bff;
@@ -90,7 +116,7 @@
     transition: background-color 0.3s ease, transform 0.2s ease;
     margin-top: 22px;
 }
-.search-controls input[type="date"]:focus,
+.search-controls input[type="text"]:focus,
 .search-controls select:focus,
 .search-controls button:focus {
     outline: none;
@@ -178,4 +204,25 @@
     background-color: #0056b3;
     color: #ffffff;
     transform: translateY(-2px);
+}
+.pagination {
+    position: relative;
+}
+.page-size2 {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
+.page-size2 label {
+    display: inline-block;
+    margin-right: 10px !important;
+    font-size: 14px;
+}
+.page-size2 input {
+    padding: 6px;
+    border: 1px solid #007bff;
+    border-radius: 4px;
+    font-size: 14px;
+    width: 100px;
 }
