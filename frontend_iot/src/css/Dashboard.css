@@ -255,3 +255,7 @@
     border-radius: 10px;
   }
 
+tspan {
+    display: block;
+    width: 20px;
+}

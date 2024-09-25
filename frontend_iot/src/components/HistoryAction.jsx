@@ -44,6 +44,8 @@ const ActionHistory = () => {
 
   const fetchActions = async () => {
     const api = `http://localhost:8000/api/v1/history-action?sensorName=${sensorName}&page=${currentPage}&limit=${limit}&time=${time}`;
+    console.log(api);
+    
     const response = await fetch(api);
     if (response.ok) {
       const data = await response.json();
@@ -62,7 +64,7 @@ const ActionHistory = () => {
   useEffect(() => {
     document.title = 'Action History';
     fetchActions();
-  }, [currentPage, sensorName]);
+  }, [currentPage, sensorName, limit]);
 
   const handleFirstPage = () => {
     setCurrentPage(1);
@@ -111,7 +113,11 @@ const ActionHistory = () => {
     }
     return pages;
   };
-
+  const updatePageLimit = (e) => {
+    setLimit(e.target.value);
+    setCurrentPage(1);
+    fetchActions();
+  }
   return (
     <div id="main">
       <button className="sidebar-toggle" onClick={toggleSidebar}>
@@ -123,6 +129,7 @@ const ActionHistory = () => {
       <div className="action-history-content">
         <h1>Action History</h1>
         <div className="search-controls">
+          <form onSubmit={(e) => e.preventDefault()}>
           <div className="search-row">
             <div className="search-item">
               <label htmlFor="startDate">Thời gian:</label>
@@ -151,6 +158,7 @@ const ActionHistory = () => {
               <button onClick={handleSearch}>Tìm kiếm</button>
             </div>
           </div>
+          </form>
         </div>
         <div className="action-table">
           <table>
@@ -173,6 +181,13 @@ const ActionHistory = () => {
                   <td>{formatDate(action.date)}</td>
                 </tr>
               ))}
+              {actions.length === 0 && (
+                <tr>
+                  <td colSpan="5" className="no-data" style={{ textAlign: "center" }}>
+                    Không tìm thấy dữ liệu
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
@@ -198,7 +213,12 @@ const ActionHistory = () => {
           </button>
           <div className="page-size2">
             <label className="lable-ps" htmlFor="">Page size</label>
-            <input type="number" value={limit} onChange={(e) => setLimit(e.target.value)} />
+            <select value={limit} onChange={updatePageLimit}>
+              <option value="5">5</option>
+              <option value="10">10</option>
+              <option value="15">15</option>
+              <option value="20">20</option>
+            </select>
           </div>
         </div>
       </div>

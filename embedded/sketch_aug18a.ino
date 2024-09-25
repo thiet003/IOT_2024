@@ -13,16 +13,20 @@
 #define LIGHT_PIN A0
 DHT dht(DHT_PIN, DHT_TYPE);
 
-const char* ssid = "T3 T";              
+// const char* ssid = "T3 T"; 
+const char* ssid = "Redmi Note 13"; 
 const char* password = "88888888";  
 // MQTT Broker
-const char* mqtt_broker = "test.mosquitto.org"; // Địa chỉ broker MQTT
+const char* mqtt_broker = "192.168.234.35"; // Địa chỉ broker MQTT
+// const char* mqtt_broker = "192.168.32.11"; // Địa chỉ broker MQTT
 const int mqtt_port = 1883;
+const char* mqtt_username = "thiet003";
+const char* mqtt_password = "123456";
 // Topic
 const char *topicFan = "iot/fan";
 const char *topicAirConditioner = "iot/air";
 const char *topicLamp = "iot/lamp";
-
+int dust = 0;
 WiFiClient espClient;
 PubSubClient client(espClient);
 
@@ -111,17 +115,19 @@ void callback(char *topic, byte *payload, unsigned int length) {
 
 void connectMqtt() {
     //connecting to a mqtt broker
-    client.setServer(mqtt_broker, mqtt_port);
+    client.setServer(mqtt_broker, 1883);
     client.setCallback(callback);
-
+}
+void reconnect(){
     while (!client.connected()) {
         String client_id = "esp8266-client-";
         client_id += String(WiFi.macAddress());
 
         Serial.printf("The client %s connects to mosquitto mqtt broker\n", client_id.c_str());
 
-        if (client.connect(client_id.c_str())) {
+        if (client.connect("ESP8266Client",mqtt_username, mqtt_password)) {
             Serial.println("Public emqx mqtt broker connected");
+            registerTopicMqtt();
         } else {
             Serial.print("failed with state ");
             Serial.print(client.state());
@@ -129,7 +135,6 @@ void connectMqtt() {
         }
     }
 }
-
 void registerTopicMqtt() {
     client.subscribe(topicFan);
     client.subscribe(topicAirConditioner);
@@ -143,7 +148,10 @@ void readDht() {
         int light = analogRead(LIGHT_PIN);
         Serial.print("LDR Value: ");
         Serial.println(light); // In giá trị ra Serial Monitor
-        // Kiểm tra xem dữ liệu có đọc được không
+        // dust = random(101);
+        // Serial.print("Dust Value: ");
+        // Serial.println(dust);
+        // Kiểm tra xem d/ữ liệu có đọc được không
         if (isnan(humidity) || isnan(temperature) || isnan(light)) {
           Serial.println("Failed to read from DHT sensor!");
           return;
@@ -176,6 +184,9 @@ void setup() {
 void loop() {
     // wait server connected
     delay(1000);
+    if (!client.connected()) {
+    reconnect();  // Kết nối lại nếu cần
+  }
     client.loop();
     readDht();
     delay(1000);

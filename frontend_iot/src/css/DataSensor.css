@@ -87,7 +87,8 @@
     cursor: pointer;
     border: none;
     max-width: 150px;
-    margin-left: 50px;
+    margin-left: -50px;
+    align-self: flex-end;
   }
   
   .search-container button:hover {
@@ -164,7 +165,7 @@
   }
   .page-size {
     position: absolute;
-    right: 0;
+    right: 20px;
     top: 50%;
     transform: translateY(-50%);
   }
@@ -172,7 +173,7 @@
     margin-right: 10px;
     font-weight: 700;
   }
-  .page-size input {
+  .page-size select {
     padding: 6px;
     border: 1px solid #007bff;
     border-radius: 4px;

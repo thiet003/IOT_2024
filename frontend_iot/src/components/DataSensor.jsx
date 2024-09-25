@@ -18,6 +18,7 @@ const DataSensor = () => {
   const [endDate, setEndDate] = useState("");
   const [sortBy, setSortBy] = useState("date");
   const [typeSort, setTypeSort] = useState("asc");
+  const [loading, setLoading] = useState(true);
   const formatDateToVietnamTimezone = (dateString) => {
     const vietnamTimezone = "Asia/Ho_Chi_Minh";
     const formattedDate = moment(dateString)
@@ -30,6 +31,7 @@ const DataSensor = () => {
       const response = await fetch(
         `http://localhost:8000/api/v1/sensors?page=${page}&keyword=${searchTerm}&searchBy=${searchField}&startDate=${startDate}&endDate=${endDate}&sortBy=${sortBy}&typeSort=${typeSort}&limit=${limit}`
       );
+      setLoading(true);
       const result = await response.json();
       console.log(result);
       
@@ -38,14 +40,21 @@ const DataSensor = () => {
       setIsDataEmpty(false);
     } catch (error) {
       console.error("Error fetching data:", error);
+      setData([]);
+      setTotalPages(0);
       setIsDataEmpty(true);
+
     }
+    finally{
+      setLoading(false);
+    }
+
   };
 
   useEffect(() => {
     document.title = 'Data Sensor';
     fetchData();
-  }, [page, sortBy, typeSort]);
+  }, [page, sortBy, typeSort,limit]);
 
   const handleSearch = () => {
     setPage(1);
@@ -78,6 +87,11 @@ const DataSensor = () => {
 
     return pages;
   };
+  const setPageSize = async (e) => {
+    setLimit(e.target.value);
+    setPage(1);
+    fetchData();
+  };
   if (isDataEmpty) {
     return (
       <div id="main">
@@ -104,7 +118,7 @@ const DataSensor = () => {
       )}
       <div className="sensor-table-container">
         <h1>Data Sensor</h1>
-        <div className="search-container">
+          <form className="search-container" onSubmit={(e) => e.preventDefault()}>
           <div className="data-search">
             <div className="search-items">
               <div>
@@ -128,34 +142,15 @@ const DataSensor = () => {
                   <option value="temperature">Nhiệt độ</option>
                   <option value="humidity">Độ ẩm</option>
                   <option value="light">Ánh sáng</option>
+                  <option value="date">Ngày</option>
                 </select>
                 
               </div>
               
             </div>
-            <div className="search-items">
-              <div>
-                <label htmlFor="startDate">Bắt đầu:</label>
-                <input
-                  id="startDate"
-                  type="date"
-                  value={startDate}
-                  onChange={(e) => setStartDate(e.target.value)}
-                />
-              </div>
-              <div>
-                <label htmlFor="endDate">Kết thúc:</label>
-                <input
-                  id="endDate"
-                  type="date"
-                  value={endDate}
-                  onChange={(e) => setEndDate(e.target.value)}
-                />
-              </div>
-            </div>
           </div>
           <button onClick={handleSearch}>Tìm kiếm</button>
-        </div>
+          </form>
         <table className="sensor-table">
           <thead>
             <tr>
@@ -189,6 +184,12 @@ const DataSensor = () => {
                 <td>{formatDateToVietnamTimezone(sensor.date)}</td>
               </tr>
             ))}
+            {data.length === 0 && (
+              <tr>
+                <td colSpan="6" style={{ textAlign: "center" }}>
+                  Không có dữ liệu</td>
+              </tr>
+            )}
           </tbody>
         </table>
         <div className="pagination">
@@ -224,7 +225,12 @@ const DataSensor = () => {
           </button>
           <div className="page-size">
               <label htmlFor="searchField">Page size:</label>
-              <input type="number" value={limit} onChange={(e) => setLimit(e.target.value)} />
+              <select name="" id="" value={limit} onChange={(e) => setPageSize(e)}>
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="15">15</option>
+                <option value="20">20</option>
+              </select>
         </div>
         </div>
         

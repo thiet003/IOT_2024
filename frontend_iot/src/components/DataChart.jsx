@@ -14,7 +14,7 @@ const DataChart = ({ data }) => {
         }}
       >
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="date" />
+        <XAxis dataKey="date" style={{ fontSize: '12px' }} />
         <YAxis yAxisId="left" domain={[0, 'auto']} width={60} />
         <YAxis yAxisId="right" orientation="right" domain={[0, 1024]} width={60} />
         <Tooltip />

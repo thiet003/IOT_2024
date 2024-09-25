@@ -36,8 +36,8 @@ const Dashboard = () => {
     const hours = localTime.getUTCHours().toString().padStart(2, "0");
     const minutes = localTime.getUTCMinutes().toString().padStart(2, "0");
     const seconds = localTime.getUTCSeconds().toString().padStart(2, "0");
-
-    return `${hours}:${minutes}`;
+    const time = " " + hours + ":" + minutes + ":" + seconds;
+    return time;
   };
   const handleFanClick = async () => {
     const apiFan = `http://localhost:8000/api/v1/fan/status`;
@@ -191,41 +191,28 @@ const Dashboard = () => {
     return () => clearInterval(intervalId);
   }, []);
   // Chuyển đổi màu sắc dựa trên giá trị nhiệt độ
-  const getTemperatureColor = (temp) => {
-    // Đảm bảo giá trị nhiệt độ nằm trong khoảng 20 đến 40
-    const clampedTemp = Math.max(20, Math.min(temp, 40));
-    
-    // Tính toán tỷ lệ dựa trên nhiệt độ
-    const ratio = (clampedTemp - 20) / (40 - 20);
+// Chuyển đổi màu sắc từ đỏ nhạt đến đỏ đậm dựa trên giá trị nhiệt độ
+const getTemperatureColor = (temp) => {
+  // Đảm bảo giá trị nhiệt độ nằm trong khoảng 20 đến 40
+  const clampedTemp = Math.max(20, Math.min(temp, 40));
 
-    // Màu sắc cho các ngưỡng nhiệt độ
-    const startColor = { r: 255, g: 255, b: 0 }; // Vàng
-    const midColor = { r: 255, g: 165, b: 0 };   // Cam
-    const endColor = { r: 255, g: 0, b: 0 };     // Đỏ
+  // Tính toán tỷ lệ dựa trên nhiệt độ
+  const ratio = (clampedTemp - 20) / (40 - 20);
 
-    // Tính toán màu sắc cho gradient
-    let color1, color2;
-    let mixRatio = ratio * 2;
-    if (ratio < 0.5) {
-        // Chuyển từ vàng sang cam
-        mixRatio = ratio * 2;
-        color1 = startColor;
-        color2 = midColor;
-    } else {
-        // Chuyển từ cam sang đỏ
-        mixRatio = (ratio - 0.5) * 2;
-        color1 = midColor;
-        color2 = endColor;
-    }
+  // Màu sắc cho các tông đỏ
+  const lightRed = { r: 255, g: 102, b: 102 }; // Đỏ nhạt
+  const darkRed = { r: 139, g: 0, b: 0 };     // Đỏ đậm
 
-    // Tính toán màu cuối cùng
-    const r = Math.round(color1.r * (1 - mixRatio) + color2.r * mixRatio);
-    const g = Math.round(color1.g * (1 - mixRatio) + color2.g * mixRatio);
-    const b = Math.round(color1.b * (1 - mixRatio) + color2.b * mixRatio);
+  // Tính toán màu cuối cùng dựa trên tỷ lệ
+  const r = Math.round(lightRed.r * (1 - ratio) + darkRed.r * ratio);
+  const g = Math.round(lightRed.g * (1 - ratio) + darkRed.g * ratio);
+  const b = Math.round(lightRed.b * (1 - ratio) + darkRed.b * ratio);
 
-    // Tránh gradient quá trắng bằng cách sử dụng alpha thấp hơn và kiểm soát độ sáng
-    return `linear-gradient(to bottom, rgba(${r}, ${g}, ${b}, 1), rgba(${r}, ${g}, ${b}, 0.8))`;
+  // Trả về màu cuối cùng theo định dạng gradient
+  return `linear-gradient(to bottom, rgba(${r}, ${g}, ${b}, 1), rgba(${r}, ${g}, ${b}, 0.8))`;
 };
+
+
   // Chuyển đổi màu sắc dựa trên giá trị độ ẩm
   const getHumidityColor = (hum) => {
     // Đảm bảo giá trị hum nằm trong khoảng hợp lý (0 đến 100)
@@ -248,51 +235,53 @@ const Dashboard = () => {
     return `rgb(${r}, ${g}, ${b})`;
 };
 // Chuyển đổi màu sắc dựa trên giá trị ánh sáng
-  const getLightColor = (light) => {
-    // Đảm bảo giá trị ánh sáng nằm trong khoảng 0 đến 1024
-    const clampedLight = Math.max(0, Math.min(light, 1024));
-    
-    // Ngưỡng cho màu xám
-    const grayThreshold = 100;
+const getLightColor = (light) => {
+  // Đảm bảo giá trị ánh sáng nằm trong khoảng 0 đến 1024
+  const clampedLight = Math.max(0, Math.min(light, 1024));
+  
+  // Ngưỡng cho màu xám
+  const grayThreshold = 100;
 
-    // Tính toán tỷ lệ dựa trên cường độ ánh sáng
-    const ratio = clampedLight / 1024;
+  // Tính toán tỷ lệ dựa trên cường độ ánh sáng
+  const ratio = clampedLight / 1024;
 
-    // Màu sắc cho các ngưỡng cường độ ánh sáng
-    const grayColor = { r: 128, g: 128, b: 128 };  // Xám
-    const startColorDark = { r: 0, g: 0, b: 128 };  // Xanh dương
-    const midColorDark = { r: 0, g: 128, b: 0 };    // Xanh lá nhạt
-    const midColorBright = { r: 0, g: 255, b: 0 };   // Xanh lá sáng
-    const endColorBright = { r: 255, g: 255, b: 0 };  // Vàng đậm
+  // Màu sắc cho các ngưỡng cường độ ánh sáng
+  const grayColor = { r: 128, g: 128, b: 128 };  // Xám
+  const startColorDark = { r: 128, g: 128, b: 0 };  // Vàng đậm gần đen
+  const midColorDark = { r: 255, g: 204, b: 0 };    // Vàng nhạt
+  const midColorBright = { r: 255, g: 255, b: 128 };   // Vàng sáng
+  const endColorBright = { r: 255, g: 255, b: 224 };  // Vàng gần trắng
 
-    // Tính toán màu sắc cho gradient
-    let color1, color2;
-    let mixRatio;
-    if (clampedLight <= grayThreshold) {
-        // Chuyển từ xám đến xanh dương nhạt
-        mixRatio = clampedLight / grayThreshold; // Tỷ lệ chuyển đổi từ 0 đến 1
-        color1 = grayColor;
-        color2 = startColorDark;
-    } else if (clampedLight <= 500) {
-        // Chuyển từ xanh dương nhạt sang xanh lá nhạt
-        mixRatio = (clampedLight - grayThreshold) / (500 - grayThreshold); // Tỷ lệ chuyển đổi từ 0 đến 1
-        color1 = startColorDark;
-        color2 = midColorDark;
-    } else {
-        // Chuyển từ xanh lá sáng sang vàng đậm
-        mixRatio = (clampedLight - 500) / (1024 - 500); // Tỷ lệ chuyển đổi từ 0 đến 1
-        color1 = midColorBright;
-        color2 = endColorBright;
-    }
+  // Tính toán màu sắc cho gradient
+  let color1, color2;
+  let mixRatio;
+  if (clampedLight <= grayThreshold) {
+      // Chuyển từ xám đến vàng đậm gần đen
+      mixRatio = clampedLight / grayThreshold; // Tỷ lệ chuyển đổi từ 0 đến 1
+      color1 = grayColor;
+      color2 = startColorDark;
+  } else if (clampedLight <= 500) {
+      // Chuyển từ vàng đậm sang vàng nhạt
+      mixRatio = (clampedLight - grayThreshold) / (500 - grayThreshold); // Tỷ lệ chuyển đổi từ 0 đến 1
+      color1 = startColorDark;
+      color2 = midColorDark;
+  } else {
+      // Chuyển từ vàng nhạt sang vàng sáng gần trắng
+      mixRatio = (clampedLight - 500) / (1024 - 500); // Tỷ lệ chuyển đổi từ 0 đến 1
+      color1 = midColorBright;
+      color2 = endColorBright;
+  }
 
-    // Tính toán màu cuối cùng
-    const r = Math.round(color1.r * (1 - mixRatio) + color2.r * mixRatio);
-    const g = Math.round(color1.g * (1 - mixRatio) + color2.g * mixRatio);
-    const b = Math.round(color1.b * (1 - mixRatio) + color2.b * mixRatio);
+  // Tính toán màu cuối cùng
+  const r = Math.round(color1.r * (1 - mixRatio) + color2.r * mixRatio);
+  const g = Math.round(color1.g * (1 - mixRatio) + color2.g * mixRatio);
+  const b = Math.round(color1.b * (1 - mixRatio) + color2.b * mixRatio);
 
-    // Sử dụng alpha thấp hơn và kiểm soát độ sáng
-    return `linear-gradient(to bottom, rgba(${r}, ${g}, ${b}, 1), rgba(${r}, ${g}, ${b}, 0.8))`;
+  // Sử dụng alpha thấp hơn và kiểm soát độ sáng
+  return `linear-gradient(to bottom, rgba(${r}, ${g}, ${b}, 1), rgba(${r}, ${g}, ${b}, 0.8))`;
 };
+
+
   const getLightTextColor = (lux) => {
     return lux > 512 ? "#000" : "#fff"; // Chọn màu chữ dựa trên độ sáng
   };

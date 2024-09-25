@@ -27,7 +27,9 @@ const getHistoryAction = async (req, res) => {
     // Page, limit
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
-
+    console.log("Page: ", page);
+    console.log("Limit: ", limit);
+    
     // Time ở dạng DD/MM/YYYY HH:mm:ss và múi giờ GMT+7
     let time = req.query.time;
     // Trim time
@@ -36,7 +38,7 @@ const getHistoryAction = async (req, res) => {
     }
     let formattedUTCDateStart = null;
     let formattedUTCDateEnd = null;
-    if(time)
+    if(time)    
     {
         // Chuyển về dạng UTC ở dạng 2024-09-02T08:17:10.000Z
         formattedUTCDateStart = changeTimezone(time);
@@ -50,7 +52,12 @@ const getHistoryAction = async (req, res) => {
     // Query object    
     console.log("Start date: ", formattedUTCDateStart);
     console.log("End date: ", formattedUTCDateEnd);
+    console.log(time);
     
+    if ((!formattedUTCDateStart || !formattedUTCDateEnd) && time) {
+        formattedUTCDateStart = "2021-09-02T08:17:10.000Z";
+        formattedUTCDateEnd = "2021-09-02T08:17:11.000Z";
+    }
     const query = {};
     if (sensorName) query.sensorName = sensorName;
     if (formattedUTCDateStart && formattedUTCDateEnd) {

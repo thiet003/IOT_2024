@@ -231,6 +231,7 @@ router.post('/api/v1/lamp/status', changeLamp);
  */
 router.get('/api/v1/top-last-sensor', topLastSensor.topLastSensor);
 
+
 /**
  * @swagger
  * /api/v1/history-action:
@@ -238,7 +239,32 @@ router.get('/api/v1/top-last-sensor', topLastSensor.topLastSensor);
  *     tags:
  *       - Sensor
  *     summary: Get history of actions
- *     description: Retrieves the history of actions performed with pagination.
+ *     description: Retrieves the history of actions performed with pagination and optional date range filtering.
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *         description: Page number for pagination (defaults to 1).
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           example: 10
+ *         description: Number of actions per page (defaults to 10).
+ *       - in: query
+ *         name: time
+ *         schema:
+ *           type: string
+ *           example: "02/09/2024 08:17:10"
+ *         description: Start time for filtering actions in DD/MM/YYYY HH:mm:ss format, GMT+7.
+ *       - in: query
+ *         name: sensorName
+ *         schema:
+ *           type: string
+ *           example: "Đèn"
+ *         description: Filter actions by sensor name.
  *     responses:
  *       200:
  *         description: List of actions performed
@@ -280,12 +306,14 @@ router.get('/api/v1/top-last-sensor', topLastSensor.topLastSensor);
  *                       __v:
  *                         type: integer
  *                         example: 0
+ *       400:
+ *         description: Invalid query parameters
  *       500:
  *         description: Internal server error
- */
-
-
+ */ 
 router.get('/api/v1/history-action', getHistoryAction);
+
+
 /**
  * @swagger
  * /api/v1/sensors:
@@ -293,7 +321,45 @@ router.get('/api/v1/history-action', getHistoryAction);
  *     tags:
  *       - Sensor
  *     summary: Get all sensor data
- *     description: Retrieves all sensor data with pagination.
+ *     description: Retrieves all sensor data with pagination, searching, and sorting options.
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *         description: The page number for pagination (default is 1).
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           example: 10
+ *         description: The number of items per page (default is 10).
+ *       - in: query
+ *         name: keyword
+ *         schema:
+ *           type: string
+ *         description: The keyword to search in the fields temperature, humidity, light, or date.
+ *       - in: query
+ *         name: searchBy
+ *         schema:
+ *           type: string
+ *           enum: [all, temperature, humidity, light, date]
+ *         description: Specify the field to search by. Use 'all' to search across all fields.
+ *       - in: query
+ *         name: sortBy
+ *         schema:
+ *           type: string
+ *           enum: [date, temperature, humidity, light]
+ *           example: date
+ *         description: The field to sort the results by (default is 'date').
+ *       - in: query
+ *         name: typeSort
+ *         schema:
+ *           type: string
+ *           enum: [asc, desc]
+ *           example: desc
+ *         description: Sort order, 'asc' for ascending, 'desc' for descending (default is 'desc').
  *     responses:
  *       200:
  *         description: List of all sensor data
@@ -338,6 +404,8 @@ router.get('/api/v1/history-action', getHistoryAction);
  *                       __v:
  *                         type: number
  *                         example: 0
+ *       400:
+ *         description: Invalid searchBy parameter
  *       500:
  *         description: Internal server error
  */

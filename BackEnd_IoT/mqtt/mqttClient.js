@@ -1,7 +1,8 @@
 const mqtt = require('mqtt');
 const options = {
     port: 1883,
-    host: '192.168.121.35',
+    host: '192.168.234.35',
+    // host: '192.168.32.11',
     clientId: 'mqttjs_' + Math.random().toString(16).substr(2, 8),
     username: 'thiet003',
     password: '123456'
